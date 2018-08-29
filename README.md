@@ -6,7 +6,7 @@ This package provides easy IP based access control. This can be achieved either 
 [![Circle CI](https://circleci.com/gh/baminteractive/express-ipfilter/tree/master.svg?style=svg)](https://circleci.com/gh/baminteractive/express-ipfilter/tree/master)
 
 ## Version
-0.3.2
+0.4.0
 
 ## Installation
 
@@ -115,9 +115,9 @@ You will need to require the `IpDeniedError` type in order to handle it.
 | mode   | whether to *deny* or *allow* to the IPs provided | string|deny|
 | log   | console log actions | boolean|true|
 | logLevel | level of logging (*all*,*deny*,*allow*) | string | all
-| allowedHeaders | an array of strings for header names that are acceptable for retrieving an IP address | array | [] |
 | excluding   | routes that should be excluded from ip filtering | array|[]|
 | detectIp | define a custom function that takes an Express request object and returns an IP address to test against | function | built-in detection |
+| trustProxy | This setting is implemented using the proxy-addr package. Check the [documentation](https://www.npmjs.com/package/proxy-addr). | boolean, array, string, number, function | false |
 
 > A note on detectIp
 
@@ -156,9 +156,12 @@ This will run `eslint`,`babel`, and `mocha` and output coverage data into `cover
 
 ## Changelog
 
+0.4.0
+ * function `getClientIp` now uses `proxy-addr` to comply with express [behind proxies feature](http://expressjs.com/en/guide/behind-proxies.html). `allowedHeaders` removed due to the use of `proxy-addr`, since it does already parse HTTP headers *X-Forwarded-For).
+
 0.3.2
- * Bump the lodash version due to security concerns
- * Update lodash usage in `src/ipfulter.js` for tests to pass
+ * Bump the lodash version due to security concerns [(link)](https://nodesecurity.io/advisories/577)
+ * Update lodash usage in `src/ipfilter.js` for tests to pass
 
 0.3.1
  * Fixes critical bug that allowed access when ips is empty and mode == 'allow'.
