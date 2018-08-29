@@ -16,7 +16,7 @@ Recommended installation is with npm. To add node-ipfilter to your project, do:
 
 ## Usage with Express
 
-> NOTE: Starting with version 0.1.0, allow forwarded IP addresses through headers (forward, Cloudflare, Codio) are disabled by **default**. You must explicitly enable them by adding them to the `allowedHeaders` list.
+> NOTE: Starting with version 0.1.0, allow forwarded IP addresses through headers (forward, Cloudflare, Codio) are disabled by **default**. In version 0.4.0 `allowedHeaders` list was removed in favour of proxy-addr module, the same module used in Express to handle behind proxies scenarios. If you need to get the client IP from any other header, you should pass your own `getClientIp` function by passing `detectIp` parameter.
 
 Blacklisting certain IP addresses, while allowing all other IPs:
 
@@ -157,7 +157,7 @@ This will run `eslint`,`babel`, and `mocha` and output coverage data into `cover
 ## Changelog
 
 0.4.0
- * function `getClientIp` now uses `proxy-addr` to comply with express [behind proxies feature](http://expressjs.com/en/guide/behind-proxies.html). `allowedHeaders` removed due to the use of `proxy-addr`, since it does already parse HTTP headers *X-Forwarded-For).
+ * function `getClientIp` now uses `proxy-addr` to comply with express [behind proxies feature](http://expressjs.com/en/guide/behind-proxies.html). `allowedHeaders` removed due to the use of `proxy-addr`, since it does already parse HTTP headers (X-Forwarded-For).
 
 0.3.2
  * Bump the lodash version due to security concerns [(link)](https://nodesecurity.io/advisories/577)
