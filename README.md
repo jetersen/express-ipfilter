@@ -117,7 +117,7 @@ You will need to require the `IpDeniedError` type in order to handle it.
 | logLevel | level of logging (*all*,*deny*,*allow*) | string | all
 | excluding   | routes that should be excluded from ip filtering | array|[]|
 | detectIp | define a custom function that takes an Express request object and returns an IP address to test against | function | built-in detection |
-| trustProxy | This setting is implemented using the proxy-addr package. Check the [documentation](https://www.npmjs.com/package/proxy-addr). | boolean, array, string, number, function | false |
+| trustProxy | This setting is implemented using the proxy-addr package. Check the [documentation](https://www.npmjs.com/package/proxy-addr) for the trust parameter. | boolean, array, string, number, function | false |
 
 > A note on detectIp
 
