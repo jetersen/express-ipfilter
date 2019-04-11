@@ -14,6 +14,10 @@
   "license": "MIT",
   "author": "casz",
   "main": "index.js",
+  "files": [
+    "/index.js",
+    "/lib"
+  ],
   "scripts": {
     "test": "jest",
     "postversion": "npm run test && git push && git push --tags && npm publish"
