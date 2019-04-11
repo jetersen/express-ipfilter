@@ -15,7 +15,8 @@
   "author": "casz",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "postversion": "npm run test && git push && git push --tags && npm publish"
   },
   "husky": {
     "hooks": {
