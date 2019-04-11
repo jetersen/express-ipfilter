@@ -10,10 +10,7 @@
     "ipfilter",
     "middleware"
   ],
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/casz/express-ipfilter.git"
-  },
+  "repository": "https://github.com/casz/express-ipfilter",
   "license": "MIT",
   "author": "casz",
   "main": "index.js",
