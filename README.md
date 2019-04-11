@@ -10,10 +10,6 @@ Recommended installation is with npm. To add node-ipfilter to your project, do:
 
 ## Usage with Express
 
-> NOTE: Starting with version 0.1.0, allow forwarded IP addresses through headers (forward, Cloudflare, Codio) are disabled by **default**.
-
-> In version 0.4.0 `allowedHeaders` list was removed in favour of proxy-addr module, the same module used in Express to handle behind proxies scenarios. If you need to get the client IP from any other header, you should pass your own `getClientIp` function by passing `detectIp` parameter.
-
 Blacklisting certain IP addresses, while allowing all other IPs:
 
 ```javascript
