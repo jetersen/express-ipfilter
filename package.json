@@ -69,8 +69,7 @@
     }
   },
   "eslintIgnore": [
-    "coverage",
-    "example"
+    "coverage"
   ],
   "jest": {
     "collectCoverage": true,
