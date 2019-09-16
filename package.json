@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "test": "jest",
-    "postversion": "npm run test && git push && git push --tags && npm publish"
+    "postversion": "npm run test && git push && git push --tags"
   },
   "husky": {
     "hooks": {
