@@ -1,7 +1,0 @@
-language: node_js
-node_js:
-  - "8.9"
-  - "9.11"
-  - "10.7"
-
-cache: npm
