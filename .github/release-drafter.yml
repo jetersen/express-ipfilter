@@ -1,0 +1,36 @@
+# Configuration for Release Drafter: https://github.com/toolmantim/release-drafter
+
+# Emoji reference: https://gitmoji.carloscuesta.me/
+categories:
+  - title: ":boom: Breaking changes"
+    labels:
+      - breaking
+  - title: ":fire: Removed"
+    label: removed
+  - title: ⚠️ Deprecated
+    label: deprecated
+  - title: ":sparkles: New features and improvements"
+    labels:
+      - enhancement
+  - title: 🐛 Bug Fixes
+    labels:
+      - bug
+  - title: 📝 Documentation updates
+    label: documentation
+  - title: 📦 Dependency updates
+    label: dependencies
+  - title: 👻 Maintenance
+    label: chore
+  - title: 🚦 Tests
+    labels:
+      - test
+exclude-labels:
+  - skip-changelog
+
+template: |
+  <!-- Optional: add a release summary here -->
+  $CHANGES
+
+replacers:
+  - search: '@dependabot-preview'
+    replace: '@dependabot'
