@@ -5,3 +5,5 @@ npm-debug.log
 .idea/
 test-results.xml
 .vscode/launch.json
+package-lock.json
+yarn.lock
