@@ -27,6 +27,7 @@ export function IpFilter(
 ): express.RequestHandler;
 
 export class IpDeniedError extends Error {
+  status: number;
   constructor(
     message: string,
     extra: any,
