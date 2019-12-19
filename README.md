@@ -95,8 +95,6 @@ Using wildcard ip ranges and nginx forwarding:
     })
   )
 ```
-This library uses [ipfilter](https://github.com/tunnckoCore/ip-filter). 
-You may find more details about the usage there.
 
 ## Error Handling
 
