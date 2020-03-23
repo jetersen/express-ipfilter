@@ -92,7 +92,7 @@
     "husky": "^4.0.0",
     "jest": "^24.7.1",
     "lint-staged": "^10.0.0",
-    "prettier": "^1.16.4"
+    "prettier": "^2.0.1"
   },
   "engines": {
     "node": ">=8.9.0"
