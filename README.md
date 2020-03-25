@@ -77,6 +77,25 @@ app.use(ipfilter(ips, { mode: 'allow' }))
 module.exports = app
 ```
 
+Using wildcard ip ranges and nginx forwarding:
+
+```javascript
+  let whitelist_ips = ['10.1.*.*', '123.??.34.8*'] // matches '10.1.76.32' and '123.77.34.89'
+
+  let clientIp = function(req, res) {
+    return req.headers['x-forwarded-for'] ? (req.headers['x-forwarded-for']).split(',')[0] : ""
+  }
+  
+  app.use(
+    ipFilter({
+      id: clientIp,
+      forbidden: 'You are not authorized to access this page.',
+      strict: false,
+      filter: whitelist_ips,
+    })
+  )
+```
+
 ## Error Handling
 
 When an IP is denied, an IpDeniedError will be thrown by the middleware. If you do not handle the error, it will cause your app to crash due to an unhandled exception. Here is an example of how to handle the error, which can also be found in the example app:
