@@ -1,6 +1,6 @@
 # express-ipfilter: A light-weight IP address based filtering system
 
-This package provides easy IP based access control. This can be achieved either by blacklisting certain IPs and whitelisting all others, or whitelisting certain IPs and blacklisting all others.
+This package provides easy IP based access control. This can be achieved either by denying certain IPs and allowing all others, or allowing certain IPs and denying all others.
 
 ## Installation
 
@@ -10,14 +10,14 @@ Recommended installation is with npm. To add express-ipfilter to your project, d
 
 ## Usage with Express
 
-Blacklisting certain IP addresses, while allowing all other IPs:
+Denying certain IP addresses, while allowing all other IPs:
 
 ```javascript
 // Init dependencies
 const express = require('express')
 const ipfilter = require('express-ipfilter').IpFilter
 
-// Blacklist the following IPs
+// Allow the following IPs
 const ips = ['127.0.0.1']
 
 // Create the server
@@ -25,7 +25,7 @@ app.use(ipfilter(ips))
 app.listen(3000)
 ```
 
-Whitelisting certain IP addresses, while denying all other IPs:
+Allowing certain IP addresses, while denying all other IPs:
 
 ```javascript
 // Init dependencies
@@ -33,7 +33,7 @@ Whitelisting certain IP addresses, while denying all other IPs:
 const express = require('express')
 const ipfilter = require('express-ipfilter').IpFilter
 
-// Whitelist the following IPs
+// Allow the following IPs
 const ips = ['127.0.0.1']
 
 // Create the server
@@ -80,7 +80,7 @@ module.exports = app
 Using wildcard ip ranges and nginx forwarding:
 
 ```javascript
-  let whitelist_ips = ['10.1.*.*', '123.??.34.8*'] // matches '10.1.76.32' and '123.77.34.89'
+  let allowlist_ips = ['10.1.*.*', '123.??.34.8*'] // matches '10.1.76.32' and '123.77.34.89'
 
   let clientIp = function(req, res) {
     return req.headers['x-forwarded-for'] ? (req.headers['x-forwarded-for']).split(',')[0] : ""
@@ -91,7 +91,7 @@ Using wildcard ip ranges and nginx forwarding:
       id: clientIp,
       forbidden: 'You are not authorized to access this page.',
       strict: false,
-      filter: whitelist_ips,
+      filter: allowlist_ips,
     })
   )
 ```
