@@ -82,7 +82,7 @@
     "ip": "~1.1.0",
     "lodash": "^4.17.11",
     "proxy-addr": "^2.0.4",
-    "range_check": "^1.2.0"
+    "range_check": "^2.0.3"
   },
   "devDependencies": {
     "eslint": "^7.1.0",
