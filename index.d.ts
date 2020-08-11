@@ -16,6 +16,7 @@ export interface IpFilterOptions {
   excluding?: Route[];
   log?: boolean;
   logLevel?: 'all' | 'deny' | 'allow';
+  logF?: (message: string) => void;
   mode?: 'deny' | 'allow';
   // `@types/proxy-addr` does not export the `trust` parameter type
   trustProxy?: any;
