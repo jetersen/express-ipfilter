@@ -88,9 +88,8 @@ Using wildcard ip ranges and nginx forwarding:
   
   app.use(
     ipFilter({
-      id: clientIp,
+      detectIp: clientIp,
       forbidden: 'You are not authorized to access this page.',
-      strict: false,
       filter: allowlist_ips,
     })
   )
@@ -144,7 +143,7 @@ const customDetection = req => {
   return ipAddress
 }
 
-ipfilter(ids, { detectIp: customDetection })
+ipfilter(ips, { detectIp: customDetection })
 ```
 
 ## Contributing
