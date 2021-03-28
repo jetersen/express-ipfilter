@@ -12,7 +12,7 @@
     "express": "^4.16.4",
     "express-ipfilter": "file:../",
     "morgan": "^1.9.1",
-    "pug": "^2.0.3",
+    "pug": "^3.0.2",
     "serve-favicon": "^2.5.0"
   }
 }
