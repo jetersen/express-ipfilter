@@ -1,0 +1,21 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "04:00"
+  open-pull-requests-limit: 10
+  reviewers:
+  - jetersen
+  ignore:
+  - dependency-name: husky
+    versions:
+    - 5.0.9
+    - 5.1.0
+    - 5.1.2
+    - 5.1.3
+    - 5.2.0
+  - dependency-name: eslint-config-prettier
+    versions:
+    - 8.0.0
