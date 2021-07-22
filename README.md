@@ -17,7 +17,7 @@ Denying certain IP addresses, while allowing all other IPs:
 const express = require('express')
 const ipfilter = require('express-ipfilter').IpFilter
 
-// Allow the following IPs
+// Deny the following IPs
 const ips = ['127.0.0.1']
 
 // Create the server
