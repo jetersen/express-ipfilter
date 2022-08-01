@@ -7,3 +7,10 @@ updates:
   open-pull-requests-limit: 10
   reviewers:
   - jetersen
+- directory: /
+  package-ecosystem: github-actions
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+  reviewers:
+    - jetersen
