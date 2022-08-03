@@ -1,4 +1,7 @@
-# Configuration for Release Drafter: https://github.com/toolmantim/release-drafter
+# Configuration for Release Drafter: https://github.com/release-drafter/release-drafter
+
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
 
 # Emoji reference: https://gitmoji.carloscuesta.me/
 categories:
@@ -34,3 +37,14 @@ template: |
 replacers:
   - search: '@dependabot-preview'
     replace: '@dependabot'
+
+version-resolver:
+  major:
+    labels:
+      - 'breaking'
+  minor:
+    labels:
+      - 'enhancement'
+  patch:
+    labels:
+      - 'bug'
