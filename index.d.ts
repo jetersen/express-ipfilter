@@ -29,6 +29,7 @@ export function IpFilter(
 
 export class IpDeniedError extends Error {
   status: number;
+  extra: { ip: Ip };
   constructor(
     message: string,
     extra: any,
