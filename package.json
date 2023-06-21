@@ -76,7 +76,7 @@
   },
   "dependencies": {
     "ip": "^1.1.8",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "proxy-addr": "^2.0.7",
     "range_check": "^2.0.4"
   },
