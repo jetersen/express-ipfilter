@@ -1210,3 +1210,40 @@ describe('deniedError', () => {
     expect(err.message).toBe('The requesting IP was denied')
   })
 })
+
+describe('Async', () => {
+  beforeEach(() => {
+    req = {
+      session: {},
+      headers: [],
+      connection: {
+        remoteAddress: ''
+      }
+    }
+  })
+
+  it('async allow', done => {
+    ipfilter = IpFilter(async () => ['127.0.0.1'], {
+      mode: 'allow',
+      log: false,
+      trustProxy: () => true
+    })
+    req.connection.remoteAddress = '127.0.0.1'
+    ipfilter(req, {}, () => {
+      done()
+    })
+  })
+
+  it('async deny', done => {
+    ipfilter = IpFilter(async () => ['127.0.0.1'], {
+      mode: 'deny',
+      log: false,
+      trustProxy: 5
+    })
+    req.connection.remoteAddress = '127.0.0.1'
+    ipfilter(req, {}, () => {
+      done()
+    })
+  })
+
+})

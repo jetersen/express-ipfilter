@@ -6,9 +6,14 @@ export type Route           = string;
 export type StartEndIpRange = Ip[];
 export type IpRange         = CidrRange | StartEndIpRange;
 export type IpList          = Array<Ip | IpRange>;
+export type IPListAsync     = Promise<IpList>;
 
 export interface IpCallback {
   (): IpList;
+}
+
+export interface IpAsyncCallback {
+  (): Promise<IpList>;
 }
 
 export interface IpFilterOptions {
@@ -23,7 +28,7 @@ export interface IpFilterOptions {
 }
 
 export function IpFilter(
-  ips: IpList | IpCallback,
+  ips: IpList | IpCallback | IPListAsync | IpAsyncCallback,
   opts?: IpFilterOptions,
 ): express.RequestHandler;
 
