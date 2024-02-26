@@ -29,7 +29,7 @@ jobs:
           echo "::set-output name=tag::${tag}"
           echo "::set-output name=version::${version}"
 
-      - uses: release-drafter/release-drafter@v5
+      - uses: release-drafter/release-drafter@v6
         with:
           version: ${{ steps.version.outputs.version }}
           publish: true
