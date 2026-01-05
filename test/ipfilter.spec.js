@@ -22,57 +22,57 @@ describe('enforcing IP address blacklist restrictions', () => {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
   })
 
-  it('should allow all non-blacklisted ips', done => {
+  it('should allow all non-blacklisted ips', (done) => {
     req.connection.remoteAddress = '127.0.0.2'
     ipfilter(req, {}, () => {
       done()
     })
   })
 
-  it('should allow all non-blacklisted IPv6 ips', done => {
+  it('should allow all non-blacklisted IPv6 ips', (done) => {
     req.connection.remoteAddress = '::1'
     ipfilter(req, {}, () => {
       done()
     })
   })
 
-  it('should allow all non-blacklisted IPv4 ips through the IPv6 standard', done => {
+  it('should allow all non-blacklisted IPv4 ips through the IPv6 standard', (done) => {
     req.connection.remoteAddress = '::ffff:127.0.0.2'
     ipfilter(req, {}, () => {
       done()
     })
   })
 
-  it('should allow all non-blacklisted forwarded ips', done => {
+  it('should allow all non-blacklisted forwarded ips', (done) => {
     req.headers['x-forwarded-for'] = '127.0.0.2'
     ipfilter(req, {}, () => {
       done()
     })
   })
 
-  it('should allow all multiple non-blacklisted forwarded ips', done => {
+  it('should allow all multiple non-blacklisted forwarded ips', (done) => {
     req.headers['x-forwarded-for'] = '127.0.0.2 127.0.0.3'
     ipfilter(req, {}, () => {
       done()
     })
   })
 
-  it('should deny all blacklisted ips', done => {
+  it('should deny all blacklisted ips', (done) => {
     req.connection.remoteAddress = '127.0.0.1'
     checkError(ipfilter, req, done)
   })
 
-  it('should deny all blacklisted forwarded ips', done => {
+  it('should deny all blacklisted forwarded ips', (done) => {
     req.headers['x-forwarded-for'] = '127.0.0.1'
     checkError(ipfilter, req, done)
   })
 
-  it('should deny all blacklisted ips when no options passed', done => {
+  it('should deny all blacklisted ips when no options passed', (done) => {
     ipfilter = IpFilter(['127.0.0.1'])
     req.connection.remoteAddress = '127.0.0.1'
     checkError(ipfilter, req, done)
@@ -85,8 +85,8 @@ describe('with no ips', () => {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: '127.0.0.1'
-      }
+        remoteAddress: '127.0.0.1',
+      },
     }
   })
 
@@ -95,7 +95,7 @@ describe('with no ips', () => {
       ipfilter = IpFilter([], { mode: 'allow', log: true })
     })
 
-    it('should deny', done => {
+    it('should deny', (done) => {
       checkError(ipfilter, req, done)
     })
   })
@@ -105,12 +105,12 @@ describe('with no ips', () => {
       ipfilter = IpFilter([], { mode: 'deny', log: true })
     })
 
-    it('should allow', done => {
+    it('should allow', (done) => {
       ipfilter(req, {}, () => done())
     })
   })
 
-  it('undefined ips', done => {
+  it('undefined ips', (done) => {
     ipfilter = IpFilter(undefined, { mode: 'allow', log: true })
     ipfilter(req, {}, () => done())
   })
@@ -122,44 +122,44 @@ describe('enforcing IP address whitelist restrictions', () => {
       ipfilter = IpFilter(['127.0.0.1'], {
         log: false,
         mode: 'allow',
-        trustProxy: true
+        trustProxy: true,
       })
       req = {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow whitelisted ips', done => {
+    it('should allow whitelisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow whitelisted forwarded ips', done => {
+    it('should allow whitelisted forwarded ips', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow whitelisted port ips', done => {
+    it('should allow whitelisted port ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1:84849'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should deny all non-whitelisted ips', done => {
+    it('should deny all non-whitelisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.2'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny all non-whitelisted forwarded ips', done => {
+    it('should deny all non-whitelisted forwarded ips', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.2'
       checkError(ipfilter, req, done)
     })
@@ -173,44 +173,44 @@ describe('using cidr block', () => {
       ipfilter = IpFilter(['127.0.0.1/28'], {
         log: false,
         mode: 'allow',
-        trustProxy: true
+        trustProxy: true,
       })
       req = {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow whitelisted ips', done => {
+    it('should allow whitelisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow whitelisted forwarded ips', done => {
+    it('should allow whitelisted forwarded ips', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow whitelisted forwarded ips with ports', done => {
+    it('should allow whitelisted forwarded ips with ports', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.1:23456'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should deny all non-whitelisted ips', done => {
+    it('should deny all non-whitelisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.17'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny all non-whitelisted forwarded ips', done => {
+    it('should deny all non-whitelisted forwarded ips', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.17'
       checkError(ipfilter, req, done)
     })
@@ -220,37 +220,37 @@ describe('using cidr block', () => {
     beforeEach(() => {
       ipfilter = IpFilter(['127.0.0.1/28'], {
         log: false,
-        trustProxy: true
+        trustProxy: true,
       })
       req = {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow all non-blacklisted ips', done => {
+    it('should allow all non-blacklisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.17'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow all non-blacklisted forwarded ips', done => {
+    it('should allow all non-blacklisted forwarded ips', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.17'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should deny all blacklisted ips', done => {
+    it('should deny all blacklisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny all blacklisted forwarded ips', done => {
+    it('should deny all blacklisted forwarded ips', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.1'
       checkError(ipfilter, req, done)
     })
@@ -260,18 +260,18 @@ describe('using cidr block', () => {
     beforeEach(() => {
       ipfilter = IpFilter(['127.0.0.1/28'], {
         log: false,
-        allowPrivateIPs: true
+        allowPrivateIPs: true,
       })
       req = {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow all private ips', done => {
+    it('should allow all private ips', (done) => {
       req.connection.remoteAddress = '10.0.0.0'
       ipfilter(req, {}, () => {
         done()
@@ -287,61 +287,61 @@ describe('using ranges', () => {
       ipfilter = IpFilter([['127.0.0.1', '127.0.0.3']], {
         log: false,
         mode: 'allow',
-        trustProxy: true
+        trustProxy: true,
       })
       req = {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow whitelisted ips', done => {
+    it('should allow whitelisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow whitelisted ips with port numbers', done => {
+    it('should allow whitelisted ips with port numbers', (done) => {
       req.connection.remoteAddress = '127.0.0.1:93923'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow whitelisted forwarded ips', done => {
+    it('should allow whitelisted forwarded ips', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow whitelisted forwarded ips with ports', done => {
+    it('should allow whitelisted forwarded ips with ports', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.1:23456'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should deny all non-whitelisted ips', done => {
+    it('should deny all non-whitelisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.17'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny all non-whitelisted ips with ports', done => {
+    it('should deny all non-whitelisted ips with ports', (done) => {
       req.connection.remoteAddress = '127.0.0.17:23456'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny all non-whitelisted forwarded ips', done => {
+    it('should deny all non-whitelisted forwarded ips', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.17'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny all non-whitelisted forwarded ips with ports', done => {
+    it('should deny all non-whitelisted forwarded ips with ports', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.17:23456'
       checkError(ipfilter, req, done)
     })
@@ -355,19 +355,19 @@ describe('using ranges', () => {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow whitelisted ips', done => {
+    it('should allow whitelisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should deny all non-whitelisted ips', done => {
+    it('should deny all non-whitelisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.17'
       checkError(ipfilter, req, done)
     })
@@ -377,37 +377,37 @@ describe('using ranges', () => {
     beforeEach(() => {
       ipfilter = IpFilter([['127.0.0.1', '127.0.0.3']], {
         log: false,
-        trustProxy: true
+        trustProxy: true,
       })
       req = {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow all non-blacklisted ips', done => {
+    it('should allow all non-blacklisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.17'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow all non-blacklisted forwarded ips', done => {
+    it('should allow all non-blacklisted forwarded ips', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.17'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should deny all blacklisted ips', done => {
+    it('should deny all blacklisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny all blacklisted forwarded ips', done => {
+    it('should deny all blacklisted forwarded ips', (done) => {
       req.headers['x-forwarded-for'] = '127.0.0.1'
       checkError(ipfilter, req, done)
     })
@@ -417,18 +417,18 @@ describe('using ranges', () => {
     beforeEach(() => {
       ipfilter = IpFilter([['127.0.0.1', '127.0.0.3']], {
         log: false,
-        allowPrivateIPs: true
+        allowPrivateIPs: true,
       })
       req = {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow all private ips', done => {
+    it('should allow all private ips', (done) => {
       req.connection.remoteAddress = '10.0.0.0'
       ipfilter(req, {}, () => {
         done()
@@ -444,12 +444,12 @@ describe('disabling forward headers', () => {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
   })
 
-  it('should deny all non-blacklisted forwarded ips', done => {
+  it('should deny all non-blacklisted forwarded ips', (done) => {
     req.connection.remoteAddress = '127.0.0.1'
     req.headers['x-forwarded-for'] = '127.0.0.2'
     checkError(ipfilter, req, done)
@@ -460,18 +460,18 @@ describe('enabling cloudflare headers', () => {
   beforeEach(() => {
     ipfilter = IpFilter(['127.0.0.1'], {
       log: false,
-      allowedHeaders: ['cf-connecting-ip']
+      allowedHeaders: ['cf-connecting-ip'],
     })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
   })
 
-  it('should allow all non-blacklisted forwarded ips', done => {
+  it('should allow all non-blacklisted forwarded ips', (done) => {
     req.connection.remoteAddress = '127.0.0.1'
     req.headers['cf-connecting-ip'] = '127.0.0.2'
     ipfilter(req, {}, () => {
@@ -487,12 +487,12 @@ describe('disabling cloudflare headers', () => {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
   })
 
-  it('should deny all non-blacklisted forwarded ips', done => {
+  it('should deny all non-blacklisted forwarded ips', (done) => {
     req.connection.remoteAddress = '127.0.0.1'
     req.headers['cf-connecting-ip'] = '127.0.0.2'
     checkError(ipfilter, req, done)
@@ -504,26 +504,26 @@ describe('excluding certain routes from filtering', () => {
     ipfilter = IpFilter(['127.0.0.1'], {
       log: false,
       mode: 'allow',
-      excluding: ['/foo.*']
+      excluding: ['/foo.*'],
     })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
+        remoteAddress: '',
       },
-      url: '/foo?bar=123'
+      url: '/foo?bar=123',
     }
   })
 
-  it('should allow requests to excluded paths', done => {
+  it('should allow requests to excluded paths', (done) => {
     req.connection.remoteAddress = '190.0.0.0'
     ipfilter(req, {}, () => {
       done()
     })
   })
 
-  it('should deny requests to other paths', done => {
+  it('should deny requests to other paths', (done) => {
     req.url = '/bar'
     req.connection.remoteAddress = '190.0.0.0'
     checkError(ipfilter, req, done)
@@ -535,18 +535,18 @@ describe('no ip address can be found', () => {
     ipfilter = IpFilter(['127.0.0.1'], {
       log: false,
       mode: 'allow',
-      excluding: ['/foo.*']
+      excluding: ['/foo.*'],
     })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
   })
 
-  it('should deny requests', done => {
+  it('should deny requests', (done) => {
     req.url = '/bar'
     req.connection.remoteAddress = ''
     checkError(ipfilter, req, done)
@@ -554,16 +554,16 @@ describe('no ip address can be found', () => {
 })
 
 describe('external logger function', () => {
-  it('should log to a passed logger exactly one message', done => {
+  it('should log to a passed logger exactly one message', (done) => {
     const messages = []
-    const logF = message => messages.push(message)
+    const logF = (message) => messages.push(message)
     ipfilter = IpFilter(['127.0.0.1'], { log: true, logF: logF })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: '127.0.0.1'
-      }
+        remoteAddress: '127.0.0.1',
+      },
     }
 
     const next = () => {
@@ -574,16 +574,16 @@ describe('external logger function', () => {
     ipfilter(req, () => {}, next)
   })
 
-  it('should log to a passed logger the correct message', done => {
+  it('should log to a passed logger the correct message', (done) => {
     const messages = []
-    const logF = message => messages.push(message)
+    const logF = (message) => messages.push(message)
     ipfilter = IpFilter(['127.0.0.1'], { log: true, logF: logF })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
 
     req.connection.remoteAddress = '127.0.0.1'
@@ -598,16 +598,16 @@ describe('external logger function', () => {
 })
 
 describe('LogLevel function', () => {
-  it('should log deny if log level is set to default', done => {
+  it('should log deny if log level is set to default', (done) => {
     const messages = []
-    const logF = message => messages.push(message)
+    const logF = (message) => messages.push(message)
     ipfilter = IpFilter(['127.0.0.1'], { log: true, logF: logF })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
 
     req.connection.remoteAddress = '127.0.0.1'
@@ -620,16 +620,16 @@ describe('LogLevel function', () => {
     ipfilter(req, () => {}, next)
   })
 
-  it('should log allow if log level is set to default', done => {
+  it('should log allow if log level is set to default', (done) => {
     const messages = []
-    const logF = message => messages.push(message)
+    const logF = (message) => messages.push(message)
     ipfilter = IpFilter(['127.0.0.1'], { log: true, logF: logF })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
 
     req.connection.remoteAddress = '127.0.0.2'
@@ -642,20 +642,20 @@ describe('LogLevel function', () => {
     ipfilter(req, () => {}, next)
   })
 
-  it('should log deny if log level is set to all', done => {
+  it('should log deny if log level is set to all', (done) => {
     const messages = []
-    const logF = message => messages.push(message)
+    const logF = (message) => messages.push(message)
     ipfilter = IpFilter(['127.0.0.1'], {
       log: true,
       logF: logF,
-      logLevel: 'all'
+      logLevel: 'all',
     })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
 
     req.connection.remoteAddress = '127.0.0.1'
@@ -668,20 +668,20 @@ describe('LogLevel function', () => {
     ipfilter(req, () => {}, next)
   })
 
-  it('should log allow if log level is set to all', done => {
+  it('should log allow if log level is set to all', (done) => {
     const messages = []
-    const logF = message => messages.push(message)
+    const logF = (message) => messages.push(message)
     ipfilter = IpFilter(['127.0.0.1'], {
       log: true,
       logF: logF,
-      logLevel: 'all'
+      logLevel: 'all',
     })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
 
     req.connection.remoteAddress = '127.0.0.2'
@@ -694,20 +694,20 @@ describe('LogLevel function', () => {
     ipfilter(req, () => {}, next)
   })
 
-  it('should log allow if log level is set to allow', done => {
+  it('should log allow if log level is set to allow', (done) => {
     const messages = []
-    const logF = message => messages.push(message)
+    const logF = (message) => messages.push(message)
     ipfilter = IpFilter(['127.0.0.1'], {
       log: true,
       logF: logF,
-      logLevel: 'allow'
+      logLevel: 'allow',
     })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
 
     req.connection.remoteAddress = '127.0.0.2'
@@ -720,20 +720,20 @@ describe('LogLevel function', () => {
     ipfilter(req, () => {}, next)
   })
 
-  it('should not log deny if log level is set to allow', done => {
+  it('should not log deny if log level is set to allow', (done) => {
     const messages = []
-    const logF = message => messages.push(message)
+    const logF = (message) => messages.push(message)
     ipfilter = IpFilter(['127.0.0.1'], {
       log: true,
       logF: logF,
-      logLevel: 'allow'
+      logLevel: 'allow',
     })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
 
     req.connection.remoteAddress = '127.0.0.1'
@@ -746,20 +746,20 @@ describe('LogLevel function', () => {
     ipfilter(req, () => {}, next)
   })
 
-  it('should not log allow if log level is set to deny', done => {
+  it('should not log allow if log level is set to deny', (done) => {
     const messages = []
-    const logF = message => messages.push(message)
+    const logF = (message) => messages.push(message)
     ipfilter = IpFilter(['127.0.0.1'], {
       log: true,
       logF: logF,
-      logLevel: 'deny'
+      logLevel: 'deny',
     })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
 
     req.connection.remoteAddress = '127.0.0.2'
@@ -772,9 +772,9 @@ describe('LogLevel function', () => {
     ipfilter(req, () => {}, next)
   })
 
-  it('should not log allow if log level is set to deny and a exclude path is set', done => {
+  it('should not log allow if log level is set to deny and a exclude path is set', (done) => {
     const messages = []
-    const logF = message => {
+    const logF = (message) => {
       console.log(message, 'it happend!')
       messages.push(message)
     }
@@ -782,15 +782,15 @@ describe('LogLevel function', () => {
       log: true,
       logF: logF,
       logLevel: 'deny',
-      excluding: ['/health']
+      excluding: ['/health'],
     })
     req = {
       url: '/health/foo/bar',
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
 
     req.connection.remoteAddress = '127.0.0.1'
@@ -803,20 +803,20 @@ describe('LogLevel function', () => {
     ipfilter(req, () => {}, next)
   })
 
-  it('should log deny if log level is set to deny', done => {
+  it('should log deny if log level is set to deny', (done) => {
     const messages = []
-    const logF = message => messages.push(message)
+    const logF = (message) => messages.push(message)
     ipfilter = IpFilter(['127.0.0.1'], {
       log: true,
       logF: logF,
-      logLevel: 'deny'
+      logLevel: 'deny',
     })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
 
     req.connection.remoteAddress = '127.0.0.1'
@@ -829,22 +829,22 @@ describe('LogLevel function', () => {
     ipfilter(req, () => {}, next)
   })
 
-  it('should log allow if log level is set to allow and excluded path is set', done => {
+  it('should log allow if log level is set to allow and excluded path is set', (done) => {
     const messages = []
-    const logF = message => messages.push(message)
+    const logF = (message) => messages.push(message)
     ipfilter = IpFilter(['127.0.0.1'], {
       log: true,
       logF: logF,
       mode: 'allow',
-      excluding: ['/foo.*']
+      excluding: ['/foo.*'],
     })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
+        remoteAddress: '',
       },
-      url: '/foo?bar=123'
+      url: '/foo?bar=123',
     }
     req.connection.remoteAddress = '190.0.0.0'
     ipfilter(req, {}, () => {
@@ -860,18 +860,18 @@ describe('an array of cidr blocks', () => {
     beforeEach(() => {
       ipfilter = IpFilter(['72.30.0.0/26', '127.0.0.1/24'], {
         mode: 'deny',
-        log: false
+        log: false,
       })
       req = {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should deny all blacklisted ips', done => {
+    it('should deny all blacklisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       checkError(ipfilter, req, done)
     })
@@ -881,18 +881,18 @@ describe('an array of cidr blocks', () => {
     beforeEach(() => {
       ipfilter = IpFilter(['72.30.0.0/26', '127.0.0.1/24'], {
         mode: 'allow',
-        log: false
+        log: false,
       })
       req = {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow all whitelisted ips', done => {
+    it('should allow all whitelisted ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       ipfilter(req, {}, () => {
         done()
@@ -906,32 +906,32 @@ describe('mixing different types of filters', () => {
     beforeEach(() => {
       ipfilter = IpFilter(
         ['127.0.0.1', '192.168.1.3/28', ['127.0.0.3', '127.0.0.35']],
-        { cidr: true, mode: 'allow', log: false }
+        { cidr: true, mode: 'allow', log: false },
       )
       req = {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow explicit ips', done => {
+    it('should allow explicit ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow ips in a cidr block', done => {
+    it('should allow ips in a cidr block', (done) => {
       req.connection.remoteAddress = '192.168.1.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow ips in a range', done => {
+    it('should allow ips in a range', (done) => {
       req.connection.remoteAddress = '127.0.0.20'
       ipfilter(req, {}, () => {
         done()
@@ -943,28 +943,28 @@ describe('mixing different types of filters', () => {
     beforeEach(() => {
       ipfilter = IpFilter(
         ['127.0.0.1', '192.168.1.3/28', ['127.0.0.3', '127.0.0.35']],
-        { mode: 'deny', log: false }
+        { mode: 'deny', log: false },
       )
       req = {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should deny explicit ips', done => {
+    it('should deny explicit ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny ips in a cidr block', done => {
+    it('should deny ips in a cidr block', (done) => {
       req.connection.remoteAddress = '192.168.1.15'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny ips in a range', done => {
+    it('should deny ips in a range', (done) => {
       req.connection.remoteAddress = '127.0.0.15'
       checkError(ipfilter, req, done)
     })
@@ -977,7 +977,7 @@ describe('mixing different types of filters with IPv4 and IPv6', () => {
     '192.168.1.3/28',
     '2001:4860:8006::62',
     '2001:4860:8007::62/64',
-    ['127.0.0.3', '127.0.0.35']
+    ['127.0.0.3', '127.0.0.35'],
   ]
 
   describe('with a whitelist', () => {
@@ -987,40 +987,40 @@ describe('mixing different types of filters with IPv4 and IPv6', () => {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow explicit IPv4 ips', done => {
+    it('should allow explicit IPv4 ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow IPv4 ips in a cidr block', done => {
+    it('should allow IPv4 ips in a cidr block', (done) => {
       req.connection.remoteAddress = '192.168.1.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow IPv4 ips in a range', done => {
+    it('should allow IPv4 ips in a range', (done) => {
       req.connection.remoteAddress = '127.0.0.20'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow explicit IPv6 ips', done => {
+    it('should allow explicit IPv6 ips', (done) => {
       req.connection.remoteAddress = '2001:4860:8006::62'
       ipfilter(req, {}, () => {
         done()
       })
     })
 
-    it('should allow IPv6 ips in a cidr block', done => {
+    it('should allow IPv6 ips in a cidr block', (done) => {
       req.connection.remoteAddress = '2001:4860:8007:0::62'
       ipfilter(req, {}, () => {
         done()
@@ -1035,32 +1035,32 @@ describe('mixing different types of filters with IPv4 and IPv6', () => {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should deny explicit ips', done => {
+    it('should deny explicit ips', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny ips in a cidr block', done => {
+    it('should deny ips in a cidr block', (done) => {
       req.connection.remoteAddress = '192.168.1.15'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny explicit IPv6 ips', done => {
+    it('should deny explicit IPv6 ips', (done) => {
       req.connection.remoteAddress = '2001:4860:8006::62'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny IPv6 ips in a cidr block', done => {
+    it('should deny IPv6 ips in a cidr block', (done) => {
       req.connection.remoteAddress = '2001:4860:8007:0::62'
       checkError(ipfilter, req, done)
     })
 
-    it('should deny ips in a range', done => {
+    it('should deny ips in a range', (done) => {
       req.connection.remoteAddress = '127.0.0.15'
       checkError(ipfilter, req, done)
     })
@@ -1078,18 +1078,18 @@ describe('using a custom ip detection function', () => {
     ipfilter = IpFilter(['127.0.0.1'], {
       detectIp: detectIp,
       log: false,
-      allowedHeaders: ['x-forwarded-for']
+      allowedHeaders: ['x-forwarded-for'],
     })
     req = {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
   })
 
-  it('should find the ip correctly', done => {
+  it('should find the ip correctly', (done) => {
     req.connection.remoteAddress = '127/0/0/1'
     checkError(ipfilter, req, done)
   })
@@ -1107,18 +1107,18 @@ describe('using ips as a function', () => {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow', done => {
+    it('should allow', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       ipfilter(req, {}, () => {
         done()
       })
     })
-    it('should deny', done => {
+    it('should deny', (done) => {
       req.connection.remoteAddress = '127.0.0.2'
       checkError(ipfilter, req, done)
     })
@@ -1131,18 +1131,18 @@ describe('using ips as a function', () => {
         session: {},
         headers: [],
         connection: {
-          remoteAddress: ''
-        }
+          remoteAddress: '',
+        },
       }
     })
 
-    it('should allow', done => {
+    it('should allow', (done) => {
       req.connection.remoteAddress = '127.0.0.2'
       ipfilter(req, {}, () => {
         done()
       })
     })
-    it('should deny', done => {
+    it('should deny', (done) => {
       req.connection.remoteAddress = '127.0.0.1'
       checkError(ipfilter, req, done)
     })
@@ -1155,16 +1155,16 @@ describe('compiled trust', () => {
       session: {},
       headers: [],
       connection: {
-        remoteAddress: ''
-      }
+        remoteAddress: '',
+      },
     }
   })
 
-  it('trust proxy function', done => {
+  it('trust proxy function', (done) => {
     ipfilter = IpFilter('127.0.0.1', {
       mode: 'deny',
       log: false,
-      trustProxy: () => true
+      trustProxy: () => true,
     })
     req.connection.remoteAddress = '127.0.0.1'
     ipfilter(req, {}, () => {
@@ -1172,11 +1172,11 @@ describe('compiled trust', () => {
     })
   })
 
-  it('trust proxy with 5 hops', done => {
+  it('trust proxy with 5 hops', (done) => {
     ipfilter = IpFilter('127.0.0.1', {
       mode: 'deny',
       log: false,
-      trustProxy: 5
+      trustProxy: 5,
     })
     req.connection.remoteAddress = '127.0.0.1'
     ipfilter(req, {}, () => {
@@ -1184,11 +1184,11 @@ describe('compiled trust', () => {
     })
   })
 
-  it('trust proxy strings', done => {
+  it('trust proxy strings', (done) => {
     ipfilter = IpFilter('127.0.0.1', {
       mode: 'deny',
       log: false,
-      trustProxy: '127.0.0.1,127.0.0.2'
+      trustProxy: '127.0.0.1,127.0.0.2',
     })
     req.connection.remoteAddress = '127.0.0.1'
     ipfilter(req, {}, () => {

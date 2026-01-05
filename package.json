@@ -38,35 +38,6 @@
     "semi": false,
     "singleQuote": true
   },
-  "eslintConfig": {
-    "env": {
-      "node": true,
-      "es6": true
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:jest/recommended",
-      "prettier"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 6
-    },
-    "plugins": [
-      "prettier",
-      "jest"
-    ],
-    "rules": {
-      "prettier/prettier": "warn",
-      "no-console": "off",
-      "no-unused-vars": "warn",
-      "no-var": "warn",
-      "no-use-before-define": "warn",
-      "prefer-arrow-callback": "warn"
-    }
-  },
-  "eslintIgnore": [
-    "coverage"
-  ],
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
@@ -75,7 +46,6 @@
     ]
   },
   "dependencies": {
-    "lodash": "^4.17.11",
     "neoip": "^2.1.0",
     "proxy-addr": "^2.0.7",
     "range_check": "^2.0.4"
