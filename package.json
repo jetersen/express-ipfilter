@@ -10,7 +10,10 @@
     "ipfilter",
     "middleware"
   ],
-  "repository": "https://github.com/jetersen/express-ipfilter",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jetersen/express-ipfilter.git"
+  },
   "license": "MIT",
   "author": "jetersen",
   "main": "index.js",
