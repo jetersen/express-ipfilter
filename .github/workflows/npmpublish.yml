@@ -28,8 +28,8 @@ jobs:
         run: |
           tag=${GITHUB_REF/refs\/tags\//}
           version=${tag#v}
-          echo "::set-output name=tag::${tag}"
-          echo "::set-output name=version::${version}"
+          echo "tag=${tag}" >> $GITHUB_OUTPUT
+          echo "version=${version}" >> $GITHUB_OUTPUT
 
       - uses: release-drafter/release-drafter@v5
         with:
