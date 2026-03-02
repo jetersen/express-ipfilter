@@ -54,7 +54,7 @@
     "range_check": "^2.0.4"
   },
   "devDependencies": {
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jest": "^29.12.1",
     "eslint-plugin-prettier": "^5.5.4",
