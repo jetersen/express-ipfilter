@@ -67,7 +67,7 @@ module.exports = app
 Using a function to get Ips:
 
 ```javascript
-const ips = function() {
+const ips = function () {
   return ['127.0.0.1']
 }
 
@@ -80,19 +80,21 @@ module.exports = app
 Using wildcard ip ranges and nginx forwarding:
 
 ```javascript
-  let allowlist_ips = ['10.1.*.*', '123.??.34.8*'] // matches '10.1.76.32' and '123.77.34.89'
+let allowlist_ips = ['10.1.*.*', '123.??.34.8*'] // matches '10.1.76.32' and '123.77.34.89'
 
-  let clientIp = function(req, res) {
-    return req.headers['x-forwarded-for'] ? (req.headers['x-forwarded-for']).split(',')[0] : ""
-  }
-  
-  app.use(
-    ipFilter({
-      detectIp: clientIp,
-      forbidden: 'You are not authorized to access this page.',
-      filter: allowlist_ips,
-    })
-  )
+let clientIp = function (req, res) {
+  return req.headers['x-forwarded-for']
+    ? req.headers['x-forwarded-for'].split(',')[0]
+    : ''
+}
+
+app.use(
+  ipFilter({
+    detectIp: clientIp,
+    forbidden: 'You are not authorized to access this page.',
+    filter: allowlist_ips,
+  }),
+)
 ```
 
 ## Error Handling
@@ -111,7 +113,7 @@ if (app.get('env') === 'development') {
 
     res.render('error', {
       message: 'You shall not pass',
-      error: err
+      error: err,
     })
   })
 }
@@ -135,7 +137,7 @@ You will need to require the `IpDeniedError` type in order to handle it.
 If you need to parse an IP address in a way that is not supported by default, you can write your own parser and pass that to `ipfilter`.
 
 ```javascript
-const customDetection = req => {
+const customDetection = (req) => {
   var ipAddress
 
   ipAddress = req.connection.remoteAddress.replace(/\//g, '.')
@@ -145,6 +147,20 @@ const customDetection = req => {
 
 ipfilter(ips, { detectIp: customDetection })
 ```
+
+> **IPv6 addresses with ports**
+>
+> Some providers (e.g. AWS CloudFront via `CloudFront-Viewer-Address`) may send IPv6 addresses with a port number appended without brackets, such as `2001:4860:8006::62:3000`. This format is ambiguous because it is also a valid IPv6 address. If your source uses this format, you should strip the port in your `detectIp` function before it reaches `ipfilter`.
+>
+> ```javascript
+> const detectIp = (req) => {
+>   const raw = req.headers['cloudfront-viewer-address']
+>   // Strip the port from the end of the address
+>   return raw.substring(0, raw.lastIndexOf(':'))
+> }
+>
+> ipfilter(ips, { detectIp })
+> ```
 
 ## Contributing
 
