@@ -1103,6 +1103,152 @@ describe('an array of cidr blocks', () => {
   })
 })
 
+describe('cidr boundary checks', () => {
+  describe('IPv4 /28 boundaries', () => {
+    beforeEach(() => {
+      // 192.168.1.0/28 covers 192.168.1.0 - 192.168.1.15
+      ipfilter = IpFilter(['192.168.1.0/28'], {
+        log: false,
+        mode: 'allow',
+      })
+      req = {
+        session: {},
+        headers: [],
+        connection: {
+          remoteAddress: '',
+        },
+      }
+    })
+
+    it('should allow ip at network address', (done) => {
+      req.connection.remoteAddress = '192.168.1.0'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should allow ip at broadcast address', (done) => {
+      req.connection.remoteAddress = '192.168.1.15'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should allow ip in middle of block', (done) => {
+      req.connection.remoteAddress = '192.168.1.8'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should deny ip one above block', (done) => {
+      req.connection.remoteAddress = '192.168.1.16'
+      checkError(ipfilter, req, done)
+    })
+
+    it('should deny ip in different subnet', (done) => {
+      req.connection.remoteAddress = '192.168.2.1'
+      checkError(ipfilter, req, done)
+    })
+  })
+
+  describe('IPv6 /64 boundaries', () => {
+    beforeEach(() => {
+      ipfilter = IpFilter(['2001:db8:1234:5678::/64'], {
+        log: false,
+        mode: 'allow',
+      })
+      req = {
+        session: {},
+        headers: [],
+        connection: {
+          remoteAddress: '',
+        },
+      }
+    })
+
+    it('should allow ip within the /64 block', (done) => {
+      req.connection.remoteAddress = '2001:db8:1234:5678::1'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should allow ip at end of /64 block', (done) => {
+      req.connection.remoteAddress = '2001:db8:1234:5678:ffff:ffff:ffff:ffff'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should deny ip in different /64 block', (done) => {
+      req.connection.remoteAddress = '2001:db8:1234:5679::1'
+      checkError(ipfilter, req, done)
+    })
+
+    it('should deny IPv4 address against IPv6 cidr', (done) => {
+      req.connection.remoteAddress = '192.168.1.1'
+      checkError(ipfilter, req, done)
+    })
+  })
+
+  describe('IPv6 /128 single address', () => {
+    beforeEach(() => {
+      ipfilter = IpFilter(['2001:db8::1/128'], {
+        log: false,
+        mode: 'allow',
+      })
+      req = {
+        session: {},
+        headers: [],
+        connection: {
+          remoteAddress: '',
+        },
+      }
+    })
+
+    it('should allow the exact address', (done) => {
+      req.connection.remoteAddress = '2001:db8::1'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should deny any other address', (done) => {
+      req.connection.remoteAddress = '2001:db8::2'
+      checkError(ipfilter, req, done)
+    })
+  })
+
+  describe('IPv4 /32 single address', () => {
+    beforeEach(() => {
+      ipfilter = IpFilter(['10.0.0.1/32'], {
+        log: false,
+        mode: 'allow',
+      })
+      req = {
+        session: {},
+        headers: [],
+        connection: {
+          remoteAddress: '',
+        },
+      }
+    })
+
+    it('should allow the exact address', (done) => {
+      req.connection.remoteAddress = '10.0.0.1'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should deny any other address', (done) => {
+      req.connection.remoteAddress = '10.0.0.2'
+      checkError(ipfilter, req, done)
+    })
+  })
+})
+
 describe('mixing different types of filters', () => {
   describe('with a whitelist', () => {
     beforeEach(() => {
