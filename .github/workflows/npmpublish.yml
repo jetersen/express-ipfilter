@@ -31,7 +31,7 @@ jobs:
           echo "tag=${tag}" >> $GITHUB_OUTPUT
           echo "version=${version}" >> $GITHUB_OUTPUT
 
-      - uses: release-drafter/release-drafter@v5
+      - uses: release-drafter/release-drafter@v6
         with:
           version: ${{ steps.version.outputs.version }}
           publish: true
