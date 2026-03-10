@@ -435,6 +435,208 @@ describe('using ranges', () => {
       })
     })
   })
+
+  describe('enforcing IPv6 range restrictions with a whitelist', () => {
+    beforeEach(() => {
+      ipfilter = IpFilter([['2001:4860:8006::1', '2001:4860:8006::ff']], {
+        log: false,
+        mode: 'allow',
+      })
+      req = {
+        session: {},
+        headers: [],
+        connection: {
+          remoteAddress: '',
+        },
+      }
+    })
+
+    it('should allow IPv6 ip at start of range', (done) => {
+      req.connection.remoteAddress = '2001:4860:8006::1'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should allow IPv6 ip at end of range', (done) => {
+      req.connection.remoteAddress = '2001:4860:8006::ff'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should allow IPv6 ip within range', (done) => {
+      req.connection.remoteAddress = '2001:4860:8006::62'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should deny IPv6 ip below range', (done) => {
+      req.connection.remoteAddress = '2001:4860:8005::ffff'
+      checkError(ipfilter, req, done)
+    })
+
+    it('should deny IPv6 ip above range', (done) => {
+      req.connection.remoteAddress = '2001:4860:8006::100'
+      checkError(ipfilter, req, done)
+    })
+
+    it('should allow bracketed IPv6 with port', (done) => {
+      req.connection.remoteAddress = '[2001:4860:8006::62]:3000'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should deny bracketed IPv6 with port outside range', (done) => {
+      req.connection.remoteAddress = '[2001:4860:8006::100]:3000'
+      checkError(ipfilter, req, done)
+    })
+
+    it('should not confuse IPv6 address ending in digits with port', (done) => {
+      req.connection.remoteAddress = '2001:4860:8006::62'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+  })
+
+  describe('enforcing IPv6 range restrictions with a blacklist', () => {
+    beforeEach(() => {
+      ipfilter = IpFilter([['2001:4860:8006::1', '2001:4860:8006::ff']], {
+        log: false,
+        mode: 'deny',
+      })
+      req = {
+        session: {},
+        headers: [],
+        connection: {
+          remoteAddress: '',
+        },
+      }
+    })
+
+    it('should deny IPv6 ip within range', (done) => {
+      req.connection.remoteAddress = '2001:4860:8006::62'
+      checkError(ipfilter, req, done)
+    })
+
+    it('should allow IPv6 ip outside range', (done) => {
+      req.connection.remoteAddress = '2001:4860:8006::100'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+  })
+
+  describe('IPv4 range should not match IPv6 addresses', () => {
+    beforeEach(() => {
+      ipfilter = IpFilter([['127.0.0.1', '127.0.0.255']], {
+        log: false,
+        mode: 'allow',
+      })
+      req = {
+        session: {},
+        headers: [],
+        connection: {
+          remoteAddress: '',
+        },
+      }
+    })
+
+    it('should deny IPv6 address against IPv4 range', (done) => {
+      req.connection.remoteAddress = '2001:4860:8006::62'
+      checkError(ipfilter, req, done)
+    })
+
+    it('should deny IPv4-mapped IPv6 address against IPv4 range', (done) => {
+      req.connection.remoteAddress = '::ffff:127.0.0.1'
+      checkError(ipfilter, req, done)
+    })
+  })
+
+  describe('stripping ports from IPv4-mapped IPv6 addresses', () => {
+    beforeEach(() => {
+      ipfilter = IpFilter([['::ffff:127.0.0.1', '::ffff:127.0.0.255']], {
+        log: false,
+        mode: 'allow',
+      })
+      req = {
+        session: {},
+        headers: [],
+        connection: {
+          remoteAddress: '',
+        },
+      }
+    })
+
+    it('should allow IPv4-mapped IPv6 address in range', (done) => {
+      req.connection.remoteAddress = '::ffff:127.0.0.1'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should allow IPv4-mapped IPv6 address with port in range', (done) => {
+      req.connection.remoteAddress = '::ffff:127.0.0.1:3000'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should deny IPv4-mapped IPv6 address with port outside range', (done) => {
+      req.connection.remoteAddress = '::ffff:127.0.1.1:3000'
+      checkError(ipfilter, req, done)
+    })
+  })
+
+  describe('range boundary checks', () => {
+    beforeEach(() => {
+      ipfilter = IpFilter([['192.168.1.10', '192.168.1.20']], {
+        log: false,
+        mode: 'allow',
+      })
+      req = {
+        session: {},
+        headers: [],
+        connection: {
+          remoteAddress: '',
+        },
+      }
+    })
+
+    it('should allow ip at start of range', (done) => {
+      req.connection.remoteAddress = '192.168.1.10'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should allow ip at end of range', (done) => {
+      req.connection.remoteAddress = '192.168.1.20'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should allow ip in middle of range', (done) => {
+      req.connection.remoteAddress = '192.168.1.15'
+      ipfilter(req, {}, () => {
+        done()
+      })
+    })
+
+    it('should deny ip one below range', (done) => {
+      req.connection.remoteAddress = '192.168.1.9'
+      checkError(ipfilter, req, done)
+    })
+
+    it('should deny ip one above range', (done) => {
+      req.connection.remoteAddress = '192.168.1.21'
+      checkError(ipfilter, req, done)
+    })
+  })
 })
 
 describe('disabling forward headers', () => {
