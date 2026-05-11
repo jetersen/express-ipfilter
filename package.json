@@ -61,7 +61,7 @@
     "globals": "^17.4.0",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
-    "lint-staged": "^16.2.7",
+    "lint-staged": "^17.0.4",
     "prettier": "^3.7.4"
   },
   "engines": {
